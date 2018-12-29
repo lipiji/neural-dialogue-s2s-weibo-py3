@@ -36,7 +36,7 @@ class BotConfigs():
     CELL = "gru" # gru or lstm
     CUDA = True
     COPY = False
-    COVERAGE = True
+    COVERAGE = False
     BI_RNN = True
     BEAM_SEARCH = True
     BEAM_SIZE = 10

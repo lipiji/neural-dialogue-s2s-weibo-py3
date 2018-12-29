@@ -53,10 +53,9 @@ def init_bias(b):
 
 def split_chi(s):
     words = []
-    for e in s.decode("utf-8"):
-        words += [e.encode("utf-8")]
+    for e in s:#.decode("utf-8"):
+        words += [e]#.encode("utf-8")]
     return words
-
 
 def rebuild_dir(path):
     if os.path.exists(path):

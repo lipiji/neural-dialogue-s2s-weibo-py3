@@ -166,9 +166,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     bleu, precisions, bp, ratio, translation_length, reference_length = bleu(args.ref, args.pred)
-    print "BLEU = ",bleu
-    print "BLEU1 = ",precisions[0]
-    print "BLEU2 = ",precisions[1]
-    print "BLEU3 = ",precisions[2]
-    print "BLEU4 = ",precisions[3]
-    print "ratio = ",ratio
+    print ("BLEU = ",bleu)
+    print ("BLEU1 = ",precisions[0])
+    print ("BLEU2 = ",precisions[1])
+    print ("BLEU3 = ",precisions[2])
+    print ("BLEU4 = ",precisions[3])
+    print ("ratio = ",ratio)

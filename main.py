@@ -541,7 +541,7 @@ def run(existing_model_name = None):
             model.cuda()
         optimizer = torch.optim.Adagrad(model.parameters(), lr=consts["lr"], initial_accumulator_value=0.1)
         
-        model_name = "".join(["db.s2s.", options["cell"]])
+        model_name = "".join(["s2s.", options["cell"]])
         existing_epoch = 0
         if need_load_model:
             if existing_model_name == None:
@@ -551,7 +551,7 @@ def run(existing_model_name = None):
 
         if training_model:
             print("start training model ")
-            print_size = num_files / consts["print_time"] if num_files >= consts["print_time"] else num_files
+            print_size = num_files // consts["print_time"] if num_files >= consts["print_time"] else num_files
 
             last_total_error = float("inf")
             print("max epoch:", consts["max_epoch"])
@@ -599,20 +599,20 @@ def run(existing_model_name = None):
                     total_error += cost
                     used_batch += 1
                     partial_num_files += consts["batch_size"]
-                    if partial_num_files / print_size == 1 and idx_batch < num_batches:
-                        print(idx_batch + 1, "/" , num_batches, "batches have been processed,", )
-                        print("average cost until now:", "cost =", total_error / used_batch, ",", )
-                        print("cost_c =", error_c / used_batch, ",",)
-                        print("time:", time.time() - partial_start)
+                    if (partial_num_files // print_size) == 1 and idx_batch < num_batches:
+                        print(idx_batch + 1, "/" , num_batches, "batches have been processed,", \
+                             "average cost until now:", "cost =", total_error / used_batch, ",", \
+                             "cost_c =", error_c / used_batch, ",",\
+                             "time:", time.time() - partial_start)
                         partial_num_files = 0
                         if not options["is_debugging"]:
                             print("save model... ",)
-                            save_model(cfg.cc.MODEL_PATH + model_name + ".gpu" + str(consts["idx_gpu"]) + ".epoch" + str(epoch / consts["save_epoch"] + existing_epoch) + "." + str(num_partial), model, optimizer)
+                            save_model(cfg.cc.MODEL_PATH + model_name + ".gpu" + str(consts["idx_gpu"]) + ".epoch" + str(epoch // consts["save_epoch"] + existing_epoch) + "." + str(num_partial), model, optimizer)
                             print("finished")
                         num_partial += 1
-                print("in this epoch, total average cost =", total_error / used_batch, ",", )
-                print("cost_c =", error_c / used_batch, ",",)
-                print("time:", time.time() - epoch_start)
+                print("in this epoch, total average cost =", total_error / used_batch, ",", \
+                     "cost_c =", error_c / used_batch, ",",\
+                     "time:", time.time() - epoch_start)
 
                 print_sent_dec(y_pred, y_ext, y_mask, oovs, modules, consts, options, local_batch_size)
                 
@@ -620,14 +620,14 @@ def run(existing_model_name = None):
                     last_total_error = total_error
                     if not options["is_debugging"]:
                         print("save model... ",)
-                        save_model(cfg.cc.MODEL_PATH + model_name + ".gpu" + str(consts["idx_gpu"]) + ".epoch" + str(epoch / consts["save_epoch"] + existing_epoch) + "." + str(num_partial), model, optimizer)
+                        save_model(cfg.cc.MODEL_PATH + model_name + ".gpu" + str(consts["idx_gpu"]) + ".epoch" + str(epoch // consts["save_epoch"] + existing_epoch) + "." + str(num_partial), model, optimizer)
                         print("finished")
                 else:
                     print("optimization finished")
                     break
 
             print("save final model... ",)
-            save_model(cfg.cc.MODEL_PATH + model_name + ".final.gpu" + str(consts["idx_gpu"]) + ".epoch" + str(epoch / consts["save_epoch"] + existing_epoch) + "." + str(num_partial), model, optimizer)
+            save_model(cfg.cc.MODEL_PATH + model_name + ".final.gpu" + str(consts["idx_gpu"]) + ".epoch" + str(epoch // consts["save_epoch"] + existing_epoch) + "." + str(num_partial), model, optimizer)
             print("finished")
         else:
             print("skip training model")
